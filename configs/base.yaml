@@ -1,0 +1,62 @@
+# Base PI-NeRF Configuration
+
+experiment:
+  name: "pi_nerf_base"
+  seed: 42
+  output_dir: "experiments"
+
+model:
+  # Positional encoding
+  pos_enc_levels: 10          # L in gamma(p): 2L channels per dim
+  dir_enc_levels: 4           # For view direction encoding
+  use_hash_encoding: false    # True = Instant-NGP style hash grid
+
+  # NeRF MLP
+  net_depth: 8                # Number of layers
+  net_width: 256              # Hidden units per layer
+  skip_connect: [4]           # Layers with skip connection from input
+  use_viewdirs: true          # View-dependent color
+
+  # Coarse + Fine (hierarchical)
+  use_fine_network: true
+  fine_net_depth: 8
+  fine_net_width: 256
+
+renderer:
+  near: 2.0                   # Near plane distance
+  far: 6.0                    # Far plane distance
+  n_coarse: 64                # Samples on coarse network
+  n_fine: 128                 # Additional samples for fine network
+  perturb: true               # Stratified jitter during training
+  white_background: true      # For Blender synthetic scenes
+
+physics:
+  use_eikonal: true
+  use_laplacian: true
+  lambda_eikonal: 0.1         # Weight for Eikonal loss
+  lambda_laplacian: 0.01      # Weight for Laplacian loss
+  n_physics_samples: 512      # Random points sampled for physics loss
+  physics_warmup_steps: 1000  # Steps before physics loss kicks in
+
+training:
+  n_iterations: 200000
+  batch_size: 1024            # Rays per batch
+  lr_init: 5.0e-4
+  lr_final: 5.0e-6
+  lr_decay_steps: 250000
+  warmup_steps: 500
+  log_every: 100
+  save_every: 5000
+  val_every: 2000
+  chunk_size: 4096            # Ray chunk for memory management
+
+evaluation:
+  metrics: ["psnr", "ssim"]
+  n_test_views: 100
+
+data:
+  dataset_type: "blender"
+  scene: "lego"
+  data_dir: "data/nerf_synthetic"
+  half_res: false
+  white_background: true

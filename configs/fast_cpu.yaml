@@ -1,0 +1,62 @@
+# CPU-friendly config for development and testing
+# Inherits from base.yaml with reduced sizes
+
+experiment:
+  name: "pi_nerf_cpu_dev"
+  seed: 42
+  output_dir: "experiments"
+
+model:
+  pos_enc_levels: 6
+  dir_enc_levels: 4
+  use_hash_encoding: false
+  net_depth: 4
+  net_width: 128
+  skip_connect: [2]
+  use_viewdirs: true
+  use_fine_network: true
+  fine_net_depth: 4
+  fine_net_width: 128
+
+renderer:
+  near: 2.0
+  far: 6.0
+  n_coarse: 32
+  n_fine: 64
+  perturb: true
+  white_background: true
+
+physics:
+  use_eikonal: true
+  use_laplacian: true
+  lambda_eikonal: 0.001
+  lambda_laplacian: 0.000001
+  n_physics_samples: 128
+  physics_warmup_steps: 200
+
+training:
+  n_iterations: 5000          # Short run for CPU demo
+  batch_size: 256
+  lr_init: 5.0e-4
+  lr_final: 5.0e-6
+  lr_decay_steps: 5000
+  warmup_steps: 100
+  log_every: 50
+  save_every: 500
+  val_every: 500
+  chunk_size: 512
+
+evaluation:
+  metrics: ["psnr", "ssim"]
+  n_test_views: 10
+
+data:
+  dataset_type: "synthetic"   # Built-in synthetic scene, no download needed
+  scene: "sphere"
+  data_dir: "data/synthetic"
+  half_res: true
+  white_background: true
+  image_width: 64
+  image_height: 64
+  n_train_views: 50
+  n_test_views: 10
