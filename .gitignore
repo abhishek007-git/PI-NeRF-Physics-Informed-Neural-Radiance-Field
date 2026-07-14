@@ -1,0 +1,17 @@
+venv/
+.venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.vscode/
+.ipynb_checkpoints/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dylib
+*.dll
